@@ -49,7 +49,7 @@ class _HomepageState extends State<Homepage> {
             ), */
             Image.asset(
               // ignore: prefer_const_constructors
-              'assets/images/pic1.png', alignment: Alignment(100, 100),
+              'assets/images/p1.png', alignment: Alignment(100, 100),
               //height: 100, width: 100,
               // scale: 1,
             ),

@@ -360,7 +360,7 @@ class _SignUpPageState extends State<SignUpPage> {
     String _pass = newPasswordController.text;
 
     http.post(
-        Uri.parse("${ServerConfig.server}/bookbytes/php/register_user.php"),
+        Uri.parse("${ServerConfig.server}/bookbyte/php/register_user.php"),
         body: {
           "name": _name,
           "email": _email,
