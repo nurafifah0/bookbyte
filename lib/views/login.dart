@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
     http.post(Uri.parse("${ServerConfig.server}/bookbyte/php/login_user.php"),
         body: {"email": email, "password": pass}).then((response) {
       // print(response.statusCode);
-      // print(response.body);
+      print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         if (data['status'] == "success") {
