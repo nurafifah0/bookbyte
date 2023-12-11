@@ -25,9 +25,18 @@ class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   String eula = "";
   bool _isChecked = false;
+  late double screenWidth, screenHeight;
+  int axiscount = 2;
 
   @override
   Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth > 600) {
+      axiscount = 3;
+    } else {
+      axiscount = 2;
+    }
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
