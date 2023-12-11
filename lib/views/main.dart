@@ -12,7 +12,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //title: 'Talk Tongue App',
+     
       theme: ThemeData(
           //primarySwatch: Colors.pink,
           colorSchemeSeed: const Color.fromARGB(197, 233, 179, 207)),
