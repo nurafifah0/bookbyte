@@ -62,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: screenWidth * 0.4,
                   height: screenHeight * 0.4,
                   child: Image.asset(
-                    'assets/images/p1.png',
+                    'assets/images/pr.jpeg',
                     fit: BoxFit.contain,
                   ),
                 ),

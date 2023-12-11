@@ -30,7 +30,7 @@ class _MyDrawerState extends State<MyDrawer> {
               color: Colors.blue,
             ),
             currentAccountPicture: const CircleAvatar(
-                foregroundImage: AssetImage('assets/images/p1.png'),
+                foregroundImage: AssetImage('assets/images/pr.jpeg'),
                 backgroundColor: Colors.white),
             accountName: Text(widget.userdata.username.toString()),
             accountEmail: Padding(
