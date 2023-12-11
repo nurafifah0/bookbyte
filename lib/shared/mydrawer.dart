@@ -39,7 +39,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(widget.userdata.useremail.toString()),
-                    Text("RM100")
+                    const Text("RM100")
                   ]),
             ),
           ),

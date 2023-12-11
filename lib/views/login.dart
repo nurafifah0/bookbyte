@@ -1,13 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:bookbyte/models/user.dart';
+
 import 'package:bookbyte/shared/serverconfig.dart';
 import 'package:bookbyte/views/main.dart';
 import 'package:bookbyte/views/mainpage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(const LoginPage());
+import '../models/user.dart';
+
+//void main() => runApp(const LoginPage());
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,35 +35,32 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Material App',
-      theme: ThemeData(
-          //primarySwatch: Colors.pink,
-          colorSchemeSeed: const Color.fromARGB(197, 233, 179, 207)),
-      home: Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.black),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          leading: BackButton(
-            onPressed: () {
-              //Navigator.of(context).pop();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (content) => const Homepage()));
-            },
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        leading: BackButton(
+          onPressed: () {
+            //Navigator.of(context).pop();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (content) => const Homepage()));
+          },
         ),
-        backgroundColor: const Color.fromARGB(197, 233, 179, 207),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
+      ),
+      backgroundColor: const Color.fromARGB(197, 233, 179, 207),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
               child: Column(children: [
                 SizedBox(
                   height: 180,
                   width: 180,
                   child: Image.asset(
-                    'assets/images/pic1.png',
+                    'assets/images/p1.png',
                     alignment: const Alignment(100, 100),
                   ),
                 ),
@@ -126,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                       ? "Please enter password"
                       : null,
                 ),
-                const SizedBox(height: 30),
+                //const SizedBox(height: 30),
                 Row(
                   children: [
                     Checkbox(
@@ -137,11 +138,15 @@ class _LoginPageState extends State<LoginPage> {
                         }
                         saveremovepref(value!);
                         setState(() {
-                          _isChecked = value!;
+                          _isChecked = value;
                         });
                       },
                     ),
                     const Text("Remember Me"),
+                  ],
+                ),
+                Row(
+                  children: [
                     const SizedBox(
                       width: 70,
                     ),
@@ -157,9 +162,9 @@ class _LoginPageState extends State<LoginPage> {
                     ElevatedButton(
                       onPressed: () {
                         /* Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (content) => const Chat())); */
+                              context,
+                              MaterialPageRoute(
+                                  builder: (content) => const Chat())); */
                         _loginUser();
                       },
                       child: const Text(
@@ -203,11 +208,11 @@ class _LoginPageState extends State<LoginPage> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    String _email = emailController.text;
-    String _pass = newPasswordController.text;
+    String email = emailController.text;
+    String pass = newPasswordController.text;
 
-    http.post(Uri.parse("${ServerConfig.server}/bookbytes/php/login_user.php"),
-        body: {"email": _email, "password": _pass}).then((response) {
+    http.post(Uri.parse("${ServerConfig.server}/bookbyte/php/login_user.php"),
+        body: {"email": email, "password": pass}).then((response) {
       // print(response.statusCode);
       // print(response.body);
       if (response.statusCode == 200) {

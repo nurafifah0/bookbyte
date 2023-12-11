@@ -1,12 +1,8 @@
-import 'dart:convert';
 
-import 'package:bookbyte/models/book.dart';
 import 'package:bookbyte/models/user.dart';
 import 'package:bookbyte/shared/mydrawer.dart';
-import 'package:bookbyte/shared/serverconfig.dart';
 import 'package:bookbyte/views/newbookp.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
   final User userdata;
@@ -17,12 +13,12 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  List<Book> bookList = <Book>[];
+  //List<Book> bookList = <Book>[];
   late double screenWidth, screenHeight;
   @override
   void initState() {
     super.initState();
-    loadBooks();
+    //  loadBooks();
   }
 
   int axiscount = 2;
@@ -67,53 +63,19 @@ class _MainPageState extends State<MainPage> {
         page: "books",
         userdata: widget.userdata,
       ),
-      body: bookList.isEmpty
-          ? const Center(child: Text("No Data"))
-          : Column(
-              children: [
-                Expanded(
-                  child: GridView.count(
-                    crossAxisCount: axiscount,
-                    children: List.generate(bookList.length, (index) {
-                      return Card(
-                          child: Column(
-                        children: [
-                          Flexible(
-                            flex: 6,
-                            child: Container(
-                              width: screenWidth,
-                              padding: const EdgeInsets.all(4.0),
-                              child: Image.network(
-                                  fit: BoxFit.fill,
-                                  "${ServerConfig.server}/bookbytes/assets/books/${bookList[index].bookId}.png"),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 4,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  truncateString(
-                                      bookList[index].bookTitle.toString()),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                Text("RM ${bookList[index].bookPrice}"),
-                                Text(
-                                    "Available ${bookList[index].bookQty} unit"),
-                              ],
-                            ),
-                          )
-                        ],
-                      ));
-                    }),
-                  ),
-                )
-              ],
-            ),
+      body: const SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(children: [
+              Text("welcome to the book byte"),
+              SizedBox(
+                height: 30,
+              ),
+            ]),
+          ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: newBook,
         child: const Icon(Icons.add),
@@ -140,13 +102,13 @@ class _MainPageState extends State<MainPage> {
   String truncateString(String str) {
     if (str.length > 20) {
       str = str.substring(0, 20);
-      return str + "...";
+      return "$str...";
     } else {
       return str;
     }
   }
 
-  void loadBooks() {
+/*   void loadBooks() {
     http.get(Uri.parse("${ServerConfig.server}/bookbytes/php/load_books.php"),
         headers: {
           //get array
@@ -165,5 +127,5 @@ class _MainPageState extends State<MainPage> {
       }
       setState(() {});
     });
-  }
+  } */
 }

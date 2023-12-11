@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bookbyte/shared/serverconfig.dart';
@@ -6,7 +8,7 @@ import 'package:bookbyte/views/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() => runApp(const SignUpPage());
+//void main() => runApp(MaterialApp(const SignUpPage());
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -26,47 +28,43 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          //primarySwatch: Colors.pink,
-          colorSchemeSeed: const Color.fromARGB(197, 233, 179, 207)),
-      home: Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.black),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          /* bottom: PreferredSize(
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        /* bottom: PreferredSize(
             preferredSize: const Size.fromHeight(1.0),
             child: Container(
               color: Colors.grey,
               height: 1.0,
             ),
           ), */
-          leading: BackButton(
-            onPressed: () {
-              //Navigator.of(context).pop();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (content) => const Homepage()));
-            },
-          ),
+        leading: BackButton(
+          onPressed: () {
+            //Navigator.of(context).pop();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (content) => const Homepage()));
+          },
         ),
-        backgroundColor: const Color.fromARGB(197, 233, 179, 207),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Form(
-                key: _formKey,
-                child: Column(children: [
-                  SizedBox(
-                    height: 180,
-                    width: 180,
-                    child: Image.asset(
-                      'assets/images/p1.png',
-                      alignment: const Alignment(100, 100),
-                    ),
+      ),
+      backgroundColor: const Color.fromARGB(197, 233, 179, 207),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            child: Form(
+              key: _formKey,
+              child: Column(children: [
+                SizedBox(
+                  height: 180,
+                  width: 180,
+                  child: Image.asset(
+                    'assets/images/p1.png',
+                    alignment: const Alignment(100, 100),
                   ),
-                  /* IconButton(
+                ),
+                /* IconButton(
                     padding: const EdgeInsets.all(8),
                     alignment: Alignment.centerLeft,
                     tooltip: 'Go back',
@@ -81,140 +79,139 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   ), */
 
-                  const SizedBox(
-                    width: 400,
-                    height: 50,
-                    child: Text(
-                      "Sign Up",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                const SizedBox(
+                  width: 400,
+                  height: 50,
+                  child: Text(
+                    "Sign Up",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    // textAlign: TextAlign.center,
-                    controller: nameController,
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                        labelText: 'Name',
-                        hintText: "e.g John",
-                        labelStyle:
-                            const TextStyle(color: Colors.black, fontSize: 20),
-                        // prefixText: '\$: ',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0))),
-                    validator: (val) => val!.isEmpty || (val.length < 3)
-                        ? "name must be longer than 3"
-                        : null,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        labelText: 'email',
-                        labelStyle:
-                            const TextStyle(color: Colors.black, fontSize: 20),
-                        hintText: "    e.g john01@gmail.com",
-                        //suffixText: 'Year(s)',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0))),
-                    validator: (val) =>
-                        val!.isEmpty || !val.contains("@") || !val.contains(".")
-                            ? "enter a valid email"
-                            : null,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    // textAlign: TextAlign.center,
-                    controller: newPasswordController,
-                    keyboardType: TextInputType.visiblePassword,
-                    decoration: InputDecoration(
-                        labelText: 'New Password',
-                        hintText: "e.g As21@364",
-                        labelStyle:
-                            const TextStyle(color: Colors.black, fontSize: 20),
-                        //prefixText: '\$: ',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0))),
-                    validator: (val) => validatePassword(val.toString()),
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: confirmPasswordController,
-                    keyboardType: TextInputType.visiblePassword,
-                    decoration: InputDecoration(
-                        labelText: 'Confirm Password',
-                        labelStyle:
-                            const TextStyle(color: Colors.black, fontSize: 20),
-                        hintText: "e.g As21@364",
-                        //suffixText: 'Year(s)',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0))),
-                    validator: (val) => validatePassword(val.toString()),
-                  ),
-                  const SizedBox(
-                    height: 70,
-                    // width: 100,
-                  ),
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 70,
-                      ),
-                      ElevatedButton(
-                          onPressed: _reset,
-                          child: const Text(
-                            "Reset",
-                            style: TextStyle(fontSize: 20),
-                          )),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      ElevatedButton(
-                        onPressed: _registerUserDialog
-                        /* {
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  // textAlign: TextAlign.center,
+                  controller: nameController,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                      labelText: 'Name',
+                      hintText: "e.g John",
+                      labelStyle:
+                          const TextStyle(color: Colors.black, fontSize: 20),
+                      // prefixText: '\$: ',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0))),
+                  validator: (val) => val!.isEmpty || (val.length < 3)
+                      ? "name must be longer than 3"
+                      : null,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                      labelText: 'email',
+                      labelStyle:
+                          const TextStyle(color: Colors.black, fontSize: 20),
+                      hintText: "    e.g john01@gmail.com",
+                      //suffixText: 'Year(s)',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0))),
+                  validator: (val) =>
+                      val!.isEmpty || !val.contains("@") || !val.contains(".")
+                          ? "enter a valid email"
+                          : null,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  // textAlign: TextAlign.center,
+                  controller: newPasswordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: InputDecoration(
+                      labelText: 'New Password',
+                      hintText: "e.g As21@364",
+                      labelStyle:
+                          const TextStyle(color: Colors.black, fontSize: 20),
+                      //prefixText: '\$: ',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0))),
+                  validator: (val) => validatePassword(val.toString()),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: confirmPasswordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      labelStyle:
+                          const TextStyle(color: Colors.black, fontSize: 20),
+                      hintText: "e.g As21@364",
+                      //suffixText: 'Year(s)',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0))),
+                  validator: (val) => validatePassword(val.toString()),
+                ),
+                const SizedBox(
+                  height: 70,
+                  // width: 100,
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 70,
+                    ),
+                    ElevatedButton(
+                        onPressed: _reset,
+                        child: const Text(
+                          "Reset",
+                          style: TextStyle(fontSize: 20),
+                        )),
+                    const SizedBox(
+                      width: 30,
+                    ),
+                    ElevatedButton(
+                      onPressed: _registerUserDialog
+                      /* {
                           Navigator.of(context).pushReplacement(MaterialPageRoute(
                               builder: (context) => const Homepage()));
                         }, */
-                        /* {
+                      /* {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (content) => const Homepage()));
                         }, */
-                        ,
-                        child: const Text(
-                          "Register",
-                          style: TextStyle(fontSize: 20),
-                        ),
+                      ,
+                      child: const Text(
+                        "Register",
+                        style: TextStyle(fontSize: 20),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 80,
-                      ),
-                      Checkbox(
-                        value: _isChecked,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isChecked = value!;
-                          });
-                        },
-                      ),
-                      GestureDetector(
-                          onTap: _showEULA,
-                          child: const Text("Agree with terms?")),
-                    ],
-                  ),
-                ]),
-              ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 80,
+                    ),
+                    Checkbox(
+                      value: _isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isChecked = value!;
+                        });
+                      },
+                    ),
+                    GestureDetector(
+                        onTap: _showEULA,
+                        child: const Text("Agree with terms?")),
+                  ],
+                ),
+              ]),
             ),
           ),
         ),
@@ -244,8 +241,8 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _registerUserDialog() {
-    String _pass = newPasswordController.text;
-    String _pass2 = confirmPasswordController.text;
+    String pass = newPasswordController.text;
+    String pass2 = confirmPasswordController.text;
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -256,7 +253,7 @@ class _SignUpPageState extends State<SignUpPage> {
       ));
       return;
     }
-    if (_pass != _pass2) {
+    if (pass != pass2) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Password do not match!!!"),
         backgroundColor: Colors.red,
@@ -355,16 +352,16 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _registerUser() {
-    String _name = nameController.text;
-    String _email = emailController.text;
-    String _pass = newPasswordController.text;
+    String name = nameController.text;
+    String email = emailController.text;
+    String pass = newPasswordController.text;
 
     http.post(
         Uri.parse("${ServerConfig.server}/bookbyte/php/register_user.php"),
         body: {
-          "name": _name,
-          "email": _email,
-          "password": _pass
+          "name": name,
+          "email": email,
+          "password": pass
         }).then((response) {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
