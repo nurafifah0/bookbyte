@@ -374,7 +374,7 @@ class _SignUpPageState extends State<SignUpPage> {
         }).then((response) {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        print(data);
+        (data);
         if (data['status'] == "success") {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Registration Success"),

@@ -1,6 +1,11 @@
-
+import 'dart:convert';
+import 'dart:developer';
+import 'package:bookbyte/views/bookdetails.dart';
+import 'package:http/http.dart' as http;
+import 'package:bookbyte/models/book.dart';
 import 'package:bookbyte/models/user.dart';
 import 'package:bookbyte/shared/mydrawer.dart';
+import 'package:bookbyte/shared/serverconfig.dart';
 import 'package:bookbyte/views/newbookp.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +18,27 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  //List<Book> bookList = <Book>[];
+  List<Book> bookList = <Book>[];
   late double screenWidth, screenHeight;
+  int numofpage = 1;
+  int curpage = 1;
+  int numofresult = 0;
+
+  var color;
+  String title = "";
+
   @override
   void initState() {
     super.initState();
-    //  loadBooks();
+    loadBooks(title);
+    /*  loadBooks(
+      "all",
+    ); */
+  }
+
+  Future<void> _refresh() async {
+    // Handle your refresh logic here
+    loadBooks(title);
   }
 
   int axiscount = 2;
@@ -50,6 +70,13 @@ class _MainPageState extends State<MainPage> {
               ),
             ],
           ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showSearchDialog();
+                },
+                icon: const Icon(Icons.search))
+          ],
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           bottom: PreferredSize(
@@ -63,18 +90,102 @@ class _MainPageState extends State<MainPage> {
         page: "books",
         userdata: widget.userdata,
       ),
-      body: const SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(children: [
-              Text("welcome to the book byte"),
-              SizedBox(
-                height: 30,
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: bookList.isEmpty
+            ? const Center(child: Text("No Data"))
+            : Column(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text("Page $curpage/$numofresult"),
+                  ),
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: axiscount,
+                      children: List.generate(bookList.length, (index) {
+                        return Card(
+                          child: InkWell(
+                            onTap: () async {
+                              Book book =
+                                  Book.fromJson(bookList[index].toJson());
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (content) => BookDetails(
+                                            user: widget.userdata,
+                                            book: book,
+                                            //userdata: widget.userdata,
+                                          )));
+                              loadBooks(title);
+                            },
+                            child: Column(
+                              children: [
+                                Flexible(
+                                  flex: 6,
+                                  child: Container(
+                                    width: screenWidth,
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Image.network(
+                                        fit: BoxFit.fill,
+                                        "${ServerConfig.server}/bookbyte/assets/books/${bookList[index].bookId}.png"),
+                                  ),
+                                ),
+                                Flexible(
+                                  flex: 4,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        truncateString(bookList[index]
+                                            .bookTitle
+                                            .toString()),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                      Text("RM ${bookList[index].bookPrice}"),
+                                      Text(
+                                          "Available ${bookList[index].bookQty} unit"),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.05,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: numofpage,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        //build the list for textbutton with scroll
+                        if ((curpage - 1) == index) {
+                          //set current page number active
+                          color = Colors.red;
+                        } else {
+                          color = Colors.black;
+                        }
+                        return TextButton(
+                            onPressed: () {
+                              curpage = index + 1;
+                              loadBooks(title);
+                            },
+                            child: Text(
+                              (index + 1).toString(),
+                              style: TextStyle(color: color, fontSize: 18),
+                            ));
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ]),
-          ),
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: newBook,
@@ -108,24 +219,61 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-/*   void loadBooks() {
-    http.get(Uri.parse("${ServerConfig.server}/bookbytes/php/load_books.php"),
-        headers: {
-          //get array
-        }).then((response) {
-      //log(response.body);
+  void loadBooks(String title) {
+    http
+        .get(
+      Uri.parse(
+          "${ServerConfig.server}/bookbyte/php/load_books.php?title=$title&pageno=$curpage"),
+    )
+        .then((response) {
+      log(response.body);
       if (response.statusCode == 200) {
+        log(response.body);
         var data = jsonDecode(response.body);
         if (data['status'] == "success") {
           bookList.clear();
           data['data']['books'].forEach((v) {
             bookList.add(Book.fromJson(v));
           });
+          numofpage = int.parse(data['numofpage'].toString());
+          numofresult = int.parse(data['numberofresult'].toString());
         } else {
           //if no status failed
         }
       }
       setState(() {});
     });
-  } */
+  }
+
+  void showSearchDialog() {
+    TextEditingController searchctlr = TextEditingController();
+    title = searchctlr.text;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+            title: const Text(
+              "Search Title",
+              style: TextStyle(),
+            ),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: searchctlr,
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    loadBooks(searchctlr.text);
+                  },
+                  child: const Text("Search"),
+                )
+              ],
+            ));
+      },
+    );
+  }
 }

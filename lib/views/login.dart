@@ -109,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: newPasswordController,
 
                   keyboardType: TextInputType.visiblePassword,
+                  obscureText: true, //turn password text to invisible view
                   decoration: InputDecoration(
                     labelText: 'Password',
                     hintText: "e.g As21@364",
@@ -213,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
 
     http.post(Uri.parse("${ServerConfig.server}/bookbyte/php/login_user.php"),
         body: {"email": email, "password": pass}).then((response) {
-      // print(response.statusCode);
+      print(response.statusCode);
       print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

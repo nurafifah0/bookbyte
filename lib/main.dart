@@ -12,7 +12,6 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
       theme: ThemeData(
           //primarySwatch: Colors.pink,
           colorSchemeSeed: const Color.fromARGB(197, 233, 179, 207)),
@@ -33,9 +32,6 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(197, 233, 179, 207),
-      /*  appBar: AppBar(
-        title: const Text('Talk Tongue App'),
-      ), */
       body: Center(
           child: Container(
         padding: const EdgeInsets.all(70),
