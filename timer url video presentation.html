@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Presentation Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    #timer {
+      font-size: 36px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="timer">Loading...</div>
+
+  <script>
+    // Set the timer duration in seconds
+    var timerDuration = 10;  // Change this to your desired duration
+    var timerElement = document.getElementById('timer');
+
+    function updateTimer() {
+      timerElement.innerText = timerDuration;
+      if (timerDuration === 0) {
+        // Replace 'YOUR_VIDEO_URL' with the actual YouTube video URL
+        window.location.href = 'https://youtu.be/xRWibNZ_BLk';
+      } else {
+        timerDuration--;
+        setTimeout(updateTimer, 1000);
+      }
+    }
+
+    // Start the timer when the page loads
+    updateTimer();
+  </script>
+
+</body>
+</html>
